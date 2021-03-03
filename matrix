@@ -1,0 +1,78 @@
+#include <iostream>
+using namespace std;
+const int size = 5;
+int mmline(int arr[], int size);
+
+int checktower(double a, int i, int matrix) { // проверка для минимумов
+	extern const int size;
+	cout << a << endl << i;
+	return 0;
+}
+
+int checktower(int a, int i, int matrix) { // проверка для максимумов и исключений 
+	extern const int size;
+	return 0;
+}
+//int checktower(int a, ...) {};
+//int checktower(double a, ...) {};
+int main() {
+	extern const int size; // размер матрицы (квадратной)
+	int matrix[size][size] = {
+	{1, 5, 30, 7, 30},
+	{60, 70, 50, 50, 200}, 
+	{7, 8, 25, 13, 27}, 
+	{1, 1, 28, 8, 28}, 
+	{10, 15, 26, 7, 27}}; // ввод матрицы
+
+	int a, i = 0, j = 0;
+	for (matrix; i < size; ++i) {
+		j = 0;
+		cout << endl; // переход на новую строчку
+		for (matrix; j < size; ++j)
+			cout << (a = matrix[i][j]) << "\t";// вывод первой строчки через табуляцию
+	}
+
+// перебор всех элементов массива
+	a = 0, i = 0, j = 0;
+	for (matrix; i < size; ++i) {
+		cout << endl << "FLOPPA" << endl; // переход на новую строчку
+		int arr[size];
+		for (matrix; j < size; ++j)
+			arr[j] = matrix[i][j];
+		j = 0;
+		//checktower(mmline(arr,size),matrix);
+		cout << "check my ass: " << arr << endl;
+		cout << mmline(arr,matrix);
+	}
+// использование первой функции
+
+// использование второй функции
+
+// вывод результата
+	return 0;
+}
+extern const int size; // Вот бля, как тебя до инициализации объявить сцука
+
+int mmline(int arr[], int matrix[][size]) { // функция находит минимум и максимум строчки СУКА ЕБАНАЯ ПАДАЛь
+	int max = 0, min = 1000000, i = 0;
+	for (arr; i < size; ++i) {
+		if (arr[i] < min) // min
+			min = arr[i];
+
+		//cout << arr[i] << " " << min << "\n";
+		if (arr[i] > max) // max
+			max = arr[i];
+	}
+	i = 0;
+	if (min == max) // проверка на одинаковые числа в строке
+		for (arr; i < size; ++i)
+			return(arr[i], i);
+	else {
+		for (arr; i < size; ++i) {
+			if (arr[i] = min)
+				checktower(double(arr[i]), i, matrix); // тут сделаю перегрузку на дабл!
+			if (arr[i] = max)
+				return(arr[i], i); // перегрузку на инт
+		}
+	}
+}
