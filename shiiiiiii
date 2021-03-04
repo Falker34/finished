@@ -1,0 +1,79 @@
+#include <iostream>
+using namespace std;
+namespace kostil { // ввожу пространство имён просто чтобы константа распространялась на все функции до инициализации
+	const int size = 5;
+}
+int mmline(int arr[], int matrix[kostil::size][kostil::size]);
+int checktower(double a, int i, int matrix[kostil::size][kostil::size]);
+int checktower(int a, int i, int matrix[kostil::size][kostil::size]);
+
+int main() {
+	int matrix[kostil::size][kostil::size] = {
+	{1, 5, 30, 7, 30},
+	{60, 70, 50, 50, 200},
+	{7, 8, 25, 13, 27},
+	{1, 1, 28, 8, 28},
+	{10, 15, 26, 7, 27} };
+	int a, i = 0, j;
+	for (matrix; i < kostil::size; ++i) {
+		j = 0;
+		cout << endl; // переход на новую строчку
+		for (matrix; j < kostil::size; ++j)
+			cout << (a = matrix[i][j]) << "\t";// вывод строчки через табуляцию
+	}
+	a = 0, i = 0, j = 0;
+	for (matrix; i < kostil::size; ++i) { // 1 строчка, 2 строчка, 3 строчка...
+		cout << endl << " string: " << i+1 << endl;
+		int arr[kostil::size];  // создаем массив 
+		for (matrix; j < kostil::size; ++j)
+			arr[j] = matrix[i][j]; // добавляем в массив строчку
+		j = 0;
+		mmline(arr, matrix);
+	}
+	return 0;
+}
+
+int mmline(int arr[], int matrix[kostil::size][kostil::size]) { // функция находит минимум и максимум строчки 
+	int max = 0, min = 1000000, i = 0;
+	for (arr; i < kostil::size; ++i) {
+		if (arr[i] < min) // min
+			min = arr[i];
+		if (arr[i] > max) // max
+			max = arr[i];
+	}
+	i = 0;
+	for (arr; i < kostil::size; ++i) {
+		if (arr[i] = min)
+			checktower(double(arr[i]), i, matrix); // тут сделаю перегрузку на дабл!
+		if (arr[i] = max)
+			checktower(arr[i], i, matrix); // перегрузку на инт
+	}
+	
+	return 0;
+}
+
+int checktower(double a, int i, int matrix[kostil::size][kostil::size]) { // проверка для минимумов
+	int j = 0, max = 0;
+	for (matrix; j < kostil::size; ++j) {
+		if (matrix[j][i] > max) // находим максимум в столбце 
+			max = matrix[j][i];
+	}
+	j = 0;
+	for (matrix; j < kostil::size; ++j) { // если подаваемый минимум равен максимуму в столбце значения столбца сравниваются с максимумом и при совпадении 
+		if ((max == a) && (matrix[j][i] == max))
+			cout << "Number = " << a << "\n" << "String:" << j + 1 << "\n" << "Column:" << i + 1 << "\n" << "\n";
+	}
+	return 0;
+}
+
+int checktower(int a, int i, int matrix[kostil::size][kostil::size]) { // проверка для максимумов и исключений
+	int j = 0, min = 1000000;
+	for (matrix; j < kostil::size; ++j) 
+		if (matrix[j][i] < min) // нахождение минимума в столбце
+			min = matrix[j][i];
+	j = 0;
+	for (matrix; j < kostil::size; ++j) 
+		if ((min == a) && (matrix[j][i] == min))
+			cout << " LOWKICK " << "Number = " << a << "\n" << "String:" << j + 1 << "\n" << "Column:" << i + 1 << "\n" << "\n";
+	return 0;
+}
