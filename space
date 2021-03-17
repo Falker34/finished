@@ -1,0 +1,21 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+int main() {
+	string message;
+	getline(cin, message);
+	int msize = message.size();
+	help:
+	int i = 0;
+	for (message; i != msize; ++i)
+		if ((message[i] == message[i + 1]) && (message[i] == (char)(32))) {
+			int j = i;
+			for (message; j != msize; ++j)
+				message[j] = message[j + 1];
+			goto help;
+		}
+	cout << message << "\n";
+	return 0;
+}
