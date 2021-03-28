@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct point { double x; double y; };
+struct rectangle {
+	point leftlow;
+	point righthigh;
+	point THRID;
+	double P() {
+		double p,lenx, leny;
+		if (leftlow.x > righthigh.x)
+			lenx = leftlow.x - righthigh.x;
+		else
+			lenx = righthigh.x - leftlow.x;
+		if (leftlow.y > righthigh.y)
+			leny = leftlow.y - righthigh.y;
+		else
+			leny = righthigh.y - leftlow.y;
+		p = lenx * 2 + leny * 2;
+		return p;
+	}
+	double S() {
+		double s, lenx, leny;
+		if (leftlow.x > righthigh.x)
+			lenx = leftlow.x - righthigh.x;
+		else
+			lenx = righthigh.x - leftlow.x;
+		if (leftlow.y > righthigh.y)
+			leny = leftlow.y - righthigh.y;
+		else
+			leny = righthigh.y - leftlow.y;
+		s = leny * lenx;
+		return s;
+	}
+	bool Check() {
+		if ((((THRID.x < righthigh.x) && (THRID.x > leftlow.x)) || ((THRID.x < leftlow.x) && (THRID.x > righthigh.x))) && (((THRID.y < leftlow.y) && (THRID.y > righthigh.y)) || ((THRID.y < righthigh.y) && (THRID.y > leftlow.y))))
+			return true;
+		else
+			return false;
+	};
+};
+
+int main() {
+	rectangle NOW;
+	cout << "EXFp" << endl;
+	cin >> NOW.leftlow.x;
+	cout << "EYFp" << endl;
+	cin >> NOW.leftlow.y;
+	cout << "EXSp" << endl;
+	cin >> NOW.righthigh.x;
+	cout << "EYSp" << endl;
+	cin >> NOW.righthigh.y;
+	cout << "EXT" << endl;
+	cin >> NOW.THRID.x;
+	cout << "EYT" << endl;
+	cin >> NOW.THRID.y;
+	cout << "P = " << NOW.P() << endl;
+	cout << "S = " << NOW.S() << endl;
+	if (NOW.Check())
+		cout << "Third point is IN the rectangle" << endl;
+	else
+		cout << "Third point is OUT of the rectangle" << endl;
+return 0;
+}
