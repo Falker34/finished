@@ -71,7 +71,7 @@ int main() {
 	else
 		logY = (logA || logB);
 
-	cout << "Значение Y равно: " << logY;
-
+	cout << "Значение Y равно: " << logY <<"\n";
+	system("pause");
 	return 0;
 }
