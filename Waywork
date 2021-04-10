@@ -1,0 +1,72 @@
+#include <iostream>
+#include <locale>
+#include <string>
+using namespace std;
+
+class c10to7 {
+	public:
+	string firstn;
+	c10to7(string num) {
+		firstn = num;
+	}
+
+	string from10to7(string come){
+		string last;
+		int uni = stoi(firstn);
+		while (uni != 0) {
+			last = last + to_string((uni) % 7);
+			uni = uni / 7;
+		}
+		reverse(last.begin(), last.end()); // реверс строки с остатками
+		return(last);
+	}
+
+	string show() {
+		int i = 0;
+		for (firstn[i]; i != firstn.length(); ++i) 
+			if (((int)firstn[i] < 48) || ((int)firstn[i] > 57)) //обработка исключений
+				return "Неверный формат числа\n";
+		return from10to7(firstn);
+	};
+	string type() {
+		int i = 0;
+		for (firstn[i]; i != firstn.length(); ++i) 
+			if (((int)firstn[i] < 48) || ((int)firstn[i] > 57)) //обработка исключений
+				return "Неверный формат числа\n";
+
+		int sum = 0;
+		int help = stoi(from10to7(firstn));
+		int size = 0;
+		while (help != 0) {
+			help = help / 10;
+			++size;
+		} // узнаём размер числа
+
+		help = stoi(from10to7(firstn));
+		i = 0;
+		while (i < size) {
+			++i;
+			sum += help % 10;
+			help = help / 10;
+		}
+		
+		if (sum % 2 == 0)
+			return ("Чётное");
+		else
+			return("Нечётное");
+	};
+};
+
+int main() {
+	setlocale(LC_ALL, "Russian");
+	cout << "Выполнял работу: " << "\n";
+	cout << "Группа: " << "\n";
+	cout << "Задание: " << "Напишите класс c10to7, конвертирующий из системы счисления 10 в систему счисления 7, определяющий является ли число чётным или нечётным.\n";
+	
+	string m;
+	cin >> m;
+	c10to7 one(m);
+	cout << one.show() << endl << one.type() << endl;
+	system("pause");
+	return 0;
+}
