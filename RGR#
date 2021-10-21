@@ -58,7 +58,7 @@ namespace Work
             else
                 return "Нечётное";
         }
-        public string Reverse(string line)
+        private string Reverse(string line)
         {
             char[] arr = line.ToCharArray();
             Array.Reverse(arr);
@@ -81,3 +81,4 @@ namespace Work
         }
     }
 }
+
