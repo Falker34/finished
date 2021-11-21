@@ -1,0 +1,505 @@
+using System;
+using System.Collections.Generic;
+
+namespace Записная_книжка
+{
+    static class Generator
+    {
+        static Random rnd = new Random();
+        static string[] FNames = { "Peter", "Ilya", "Alexander" };
+        static string[] LNames = { "Bogdanov", "Stepanov", "Bogrov" };
+        static string[] Patronymics = { "Ivanovich", "Petrovich", "Dmitrievich" };
+        static string[] Country = { "Russia", "Australia", "United Kingdom" };
+        static string[] Towns = { "London", "Barnaul", "New Orlean" };
+        static string[] Streets = { "Baker", "Arbat", "Times" };
+
+        public static void randFuName(Person number)
+        {
+            number.Fullname.FirstName = FNames[rnd.Next(0, FNames.Length)];
+            number.Fullname.LastName = LNames[rnd.Next(0, LNames.Length)];
+            number.Fullname.Patronymic = Patronymics[rnd.Next(0, Patronymics.Length)];
+        }
+        public static void randPhone(Person number)
+        {
+            if (rnd.Next(0,2) == 0) 
+            {
+                number.PhoneNumb = Convert.ToString(rnd.Next(10000, 100000)) + Convert.ToString(rnd.Next(00000, 100000));
+            }
+            else 
+            {
+                number.PhoneNumb = "+" + Convert.ToString(rnd.Next(1000, 10000) + Convert.ToString(rnd.Next(00000, 100000)));
+            }
+        }
+        public static void randAddress(Person number)
+        {
+            number.Homeaddress.index = Convert.ToString(rnd.Next(00000, 100000)) + Convert.ToString(rnd.Next(01000,100000));
+            number.Homeaddress.counry = Country[rnd.Next(0, Country.Length)];
+            number.Homeaddress.town = Towns[rnd.Next(0, Towns.Length)];
+            number.Homeaddress.street = Streets[rnd.Next(0, Streets.Length)];
+            number.Homeaddress.house = rnd.Next(1,10000);
+            number.Homeaddress.apartamentNumber = rnd.Next(1, 5000);
+
+            number.Workaddress.index = Convert.ToString(rnd.Next(00000, 100000)) + Convert.ToString(rnd.Next(01000, 100000));
+            number.Workaddress.counry = Country[rnd.Next(0, Country.Length)];
+            number.Workaddress.town = Towns[rnd.Next(0, Towns.Length)];
+            number.Workaddress.street = Streets[rnd.Next(0, Streets.Length)];
+            number.Workaddress.house = rnd.Next(1, 10000);
+            number.Workaddress.officeNumber = rnd.Next(1, 5000);
+        }
+    }
+    class Person 
+    {
+        public FullName Fullname = new FullName(); //для обращения к структуре класса из мэйна
+        public HomeAddress Homeaddress = new HomeAddress();
+        public WorkAddress Workaddress = new WorkAddress();
+        private string num;//я не знаю для чего, чтобы был get/ set
+        public struct FullName
+        {
+            public string FirstName;
+            public string LastName;
+            public string Patronymic;
+            public FullName(string FN, string LN, string Pat) 
+            {
+                FirstName = FN;
+                LastName = LN;
+                Patronymic = Pat;
+            }
+            public string ReturnFName() 
+            {
+                return "Name:"+ FirstName + " Surname:"+ LastName +" Patronymic:"+ Patronymic;
+            }
+        }
+        public string PhoneNumb
+        {
+            set { num = value; }
+            get { return num; }
+        }
+        public struct HomeAddress 
+        {
+            public string index;
+            public string counry;
+            public string town;
+            public string street;
+            public int house;
+            public int apartamentNumber;
+            public HomeAddress(string i, string c, string t, string s, int h,int a) 
+            {
+                index = i;
+                counry = c;
+                town = t;
+                street = s;
+                house = h;
+                apartamentNumber = a;
+            }
+            public string ReturnHAddress()
+            {
+                return "Index:"+index+" Contry:"+counry+" Town:"+town+" Street:"+street+" House number:"+house+" Apartament number:"+apartamentNumber;
+            }
+        }
+        public struct WorkAddress
+        {
+            public string index;
+            public string counry;
+            public string town;
+            public string street;
+            public int house;
+            public int officeNumber;
+            public WorkAddress(string i, string c, string t, string s, int h, int o)
+            {
+                index = i;
+                counry = c;
+                town = t;
+                street = s;
+                house = h;
+                officeNumber = o;
+            }
+            public string ReturnWAddress()
+            {
+                return "Index:" + index + " Contry:" + counry + " Town:" + town + " Street:" + street + " House number:" + house + " Office number:" + officeNumber;
+            }
+        }
+    }
+    class Program
+    {
+        static void manualInput(Person number)
+        {
+            bool repeat;
+            Console.WriteLine("Manual Input engaged.");
+            Console.WriteLine("");
+            Console.WriteLine("Enter First Name:");
+            number.Fullname.FirstName = Console.ReadLine();
+            Console.WriteLine("Enter Last Name:");
+            number.Fullname.LastName = Console.ReadLine();
+            Console.WriteLine("Enter Patronymic or Middle Name:");
+            number.Fullname.Patronymic = Console.ReadLine();
+
+            string phoneN;
+            do
+            {
+                repeat = false;
+                Console.WriteLine("Enter the number:");
+                phoneN = Console.ReadLine();
+                if ((phoneN.Length < 7) || (phoneN.Length > 12)) //проверка на корректный размер
+                {
+                    Console.WriteLine("The length of your number is incorrect (only numbers less than 13 and greater than 6 are used)! Re-enter data.");
+                    repeat = true;
+                }
+                else if (phoneN[0] == '+')//проверка для кодов с плюсом (+7NNNNNNNN...)
+                    for (int i = 1; i < phoneN.Length - 1; i++)
+                    {
+                        if ((Convert.ToInt32(phoneN[i]) < 48) || (Convert.ToInt32(phoneN[i]) > 57))
+                        {
+                            Console.WriteLine("Error! Incorrect symbol in number was detected! Re-enter data.");
+                            repeat = true;
+                            break;
+                        }
+                    }
+                else //проверка для кодов без плюса (880055...)
+                {
+                    for (int i = 0; i < phoneN.Length - 1; i++)
+                    {
+                        if ((Convert.ToInt32(phoneN[i]) < 48) || (Convert.ToInt32(phoneN[i]) > 57))
+                        {
+                            Console.WriteLine("Error! Incorrect symbol in number was detected! Re-enter data.");
+                            repeat = true;
+                            break;
+                        }
+                    }
+                }
+            } while (repeat);
+            number.PhoneNumb = phoneN;
+
+            Console.WriteLine("Entering HOME address.");
+            string HAddress;
+            do
+            {
+                repeat = false;
+                Console.WriteLine("Enter index:");
+                HAddress = Console.ReadLine();
+                for (int i = 0; HAddress[i] < HAddress.Length; i++) {
+                    if ((Convert.ToInt32(HAddress[i]) < 48) || (Convert.ToInt32(HAddress[i]) > 57))
+                    {
+                        Console.WriteLine("Wrong index format! Re-enter data.");
+                        repeat = true;
+                        break;
+                    }
+                }
+                if ((HAddress.Length < 4) || (HAddress.Length > 10))
+                {
+                    Console.WriteLine("The length of your index is incorrect(only numbers less than 11 and greater than 3 are used)! Re - enter data.");
+                    repeat = true;
+                }
+                if (repeat) continue;
+                number.Homeaddress.index = HAddress;
+
+                Console.WriteLine("Enter contry:");
+                number.Homeaddress.counry = Console.ReadLine();
+
+                Console.WriteLine("Enter town:");
+                number.Homeaddress.town = Console.ReadLine();
+
+                Console.WriteLine("Enter street name:");
+                number.Homeaddress.street = Console.ReadLine();
+
+                Console.WriteLine("Enter the house number:");
+                HAddress = Console.ReadLine();
+                try { number.Homeaddress.house = Convert.ToInt32(HAddress); }
+                catch (System.FormatException)
+                {
+                    Console.WriteLine("Wrong house number format(only numbers are supported)! Re-enter data.");
+                    repeat = true;
+                    continue;
+                }
+                if ((Convert.ToInt32(HAddress) < 0) || (HAddress.Length == 0))
+                {
+                    Console.WriteLine("The length of your house number is incorrect(house number cannot be negative; you cannot write down an empty number)! Re - enter data.");
+                    repeat = true;
+                    continue;
+                }
+
+                Console.WriteLine("Enter the appartment number:");
+                HAddress = Console.ReadLine();
+                try { number.Homeaddress.apartamentNumber = Convert.ToInt32(HAddress); }
+                catch (System.FormatException)
+                {
+                    Console.WriteLine("Wrong appartment number format(only numbers are supported)! Re-enter data.");
+                    repeat = true;
+                    continue;
+                }
+                if ((Convert.ToInt32(HAddress) < 0) || (HAddress.Length == 0))
+                {
+                    Console.WriteLine("The length of your appartment number is incorrect(appartment number cannot be negative; you cannot write down an empty number)! Re - enter data.");
+                    repeat = true;
+                    continue;
+                }
+            } while (repeat);// Блок слишком большой чтобы обрабатываться одним циклом
+
+            Console.WriteLine("Entering WORK address:");
+            do
+            {
+                repeat = false;
+                Console.WriteLine("Enter index:");
+                HAddress = Console.ReadLine();
+                for (int i = 0; HAddress[i] < HAddress.Length; i++)
+                {
+                    if ((Convert.ToInt32(HAddress[i]) < 48) || (Convert.ToInt32(HAddress[i]) > 57))
+                    {
+                        Console.WriteLine("Wrong work index format! Re-enter data.");
+                        repeat = true;
+                        break;
+                    }
+                }
+                if ((HAddress.Length < 4) || (HAddress.Length > 10))
+                {
+                    Console.WriteLine("The length of your index is incorrect(only numbers less than 11 and greater than 3 are used)! Re - enter data.");
+                    repeat = true;
+                }
+                if (repeat) continue;
+                number.Workaddress.index = HAddress;
+
+                Console.WriteLine("Enter contry:");
+                number.Workaddress.counry = Console.ReadLine();
+
+                Console.WriteLine("Enter town:");
+                number.Workaddress.town = Console.ReadLine();
+
+                Console.WriteLine("Enter street name:");
+                number.Workaddress.street = Console.ReadLine();
+
+                Console.WriteLine("Enter the house number:");
+                HAddress = Console.ReadLine();
+                try { number.Workaddress.house = Convert.ToInt32(HAddress); }
+                catch (System.FormatException)
+                {
+                    Console.WriteLine("Wrong house number format(only numbers are supported)! Re-enter data.");
+                    repeat = true;
+                    continue;
+                }
+                if ((Convert.ToInt32(HAddress) < 0) || (HAddress.Length == 0))
+                {
+                    Console.WriteLine("The length of your house number is incorrect(house number cannot be negative; you cannot write down an empty number)! Re - enter data.");
+                    repeat = true;
+                    continue;
+                }
+
+                Console.WriteLine("Enter the office number:");
+                HAddress = Console.ReadLine();
+                try { number.Workaddress.officeNumber = Convert.ToInt32(HAddress); }
+                catch (System.FormatException)
+                {
+                    Console.WriteLine("Wrong office number format(only numbers are supported)! Re-enter data.");
+                    repeat = true;
+                    continue;
+                }
+                if ((Convert.ToInt32(HAddress) < 0) || (HAddress.Length == 0))
+                {
+                    Console.WriteLine("The length of your office number is incorrect(office number cannot be negative; you cannot write down an empty number)! Re - enter data.");
+                    repeat = true;
+                    continue;
+                }
+            } while (repeat);// Блок слишком большой чтобы обрабатываться одним циклом
+        }
+        static void randomInput(Person number)
+        {
+            Console.WriteLine("Generated Input engaged.");
+            Console.WriteLine("");
+            Generator.randFuName(number);
+            Generator.randPhone(number);
+            Generator.randAddress(number);
+        }
+        static void printAllData(List<Person> Persons)
+        {
+            Console.WriteLine("Number of people recorded:" + Persons.Count);
+            Console.WriteLine("");
+            for (int i = 0; i < Persons.Count; i++) 
+            {
+                Console.WriteLine(Persons[i].Fullname.ReturnFName());
+                Console.WriteLine("Phone number:");
+                Console.WriteLine(Persons[i].PhoneNumb);
+                Console.WriteLine("Home address:");
+                Console.WriteLine(Persons[i].Homeaddress.ReturnHAddress());
+                Console.WriteLine("Work address:");
+                Console.WriteLine(Persons[i].Workaddress.ReturnWAddress());
+                Console.WriteLine("");
+            }
+        }
+        static void searchInData(List<Person> Persons,string searchKey) 
+        {
+            Console.WriteLine("Searching engaged.");
+            Console.WriteLine("");
+            bool match = false;
+            for (int i = 0; i < Persons.Count; i++) 
+            {
+                if ((Persons[i].Fullname.FirstName == searchKey) || (Persons[i].Fullname.LastName == searchKey) || (Persons[i].Fullname.Patronymic == searchKey))
+                {
+                    Console.WriteLine("Match found in Full Name!");
+                    Console.WriteLine(Persons[i].Fullname.ReturnFName());
+                    Console.WriteLine("Phone number:");
+                    Console.WriteLine(Persons[i].PhoneNumb);
+                    Console.WriteLine("Home address:");
+                    Console.WriteLine(Persons[i].Homeaddress.ReturnHAddress());
+                    Console.WriteLine("Work address:");
+                    Console.WriteLine(Persons[i].Workaddress.ReturnWAddress());
+                    Console.WriteLine("");
+                    match = true;
+                    continue;
+                }
+                else if (Convert.ToString(Persons[i].PhoneNumb) == searchKey) 
+                {
+                    Console.WriteLine("Match found in Phone Number!");
+                    Console.WriteLine(Persons[i].Fullname.ReturnFName());
+                    Console.WriteLine("Phone number:");
+                    Console.WriteLine(Persons[i].PhoneNumb);
+                    Console.WriteLine("Home address:");
+                    Console.WriteLine(Persons[i].Homeaddress.ReturnHAddress());
+                    Console.WriteLine("Work address:");
+                    Console.WriteLine(Persons[i].Workaddress.ReturnWAddress());
+                    Console.WriteLine("");
+                    match = true;
+                    continue;
+                }
+                else if ((Convert.ToString(Persons[i].Homeaddress.index) == searchKey) || (Persons[i].Homeaddress.counry == searchKey) || (Persons[i].Homeaddress.town == searchKey) || (Persons[i].Homeaddress.street == searchKey) || (Convert.ToString(Persons[i].Homeaddress.house) == searchKey) || (Convert.ToString(Persons[i].Homeaddress.apartamentNumber) == searchKey)) 
+                {
+                    Console.WriteLine("Match found in Home Address!");
+                    Console.WriteLine(Persons[i].Fullname.ReturnFName());
+                    Console.WriteLine("Phone number:");
+                    Console.WriteLine(Persons[i].PhoneNumb);
+                    Console.WriteLine("Home address:");
+                    Console.WriteLine(Persons[i].Homeaddress.ReturnHAddress());
+                    Console.WriteLine("Work address:");
+                    Console.WriteLine(Persons[i].Workaddress.ReturnWAddress());
+                    Console.WriteLine("");
+                    match = true;
+                    continue;
+                }
+                else  if ((Convert.ToString(Persons[i].Workaddress.index) == searchKey) || (Persons[i].Workaddress.counry == searchKey) || (Persons[i].Workaddress.town == searchKey) || (Persons[i].Workaddress.street == searchKey) || (Convert.ToString(Persons[i].Workaddress.house) == searchKey) || (Convert.ToString(Persons[i].Workaddress.officeNumber) == searchKey))
+                {
+                    Console.WriteLine("Match found in Work Address!");
+                    Console.WriteLine(Persons[i].Fullname.ReturnFName());
+                    Console.WriteLine("Phone number:");
+                    Console.WriteLine(Persons[i].PhoneNumb);
+                    Console.WriteLine("Home address:");
+                    Console.WriteLine(Persons[i].Homeaddress.ReturnHAddress());
+                    Console.WriteLine("Work address:");
+                    Console.WriteLine(Persons[i].Workaddress.ReturnWAddress());
+                    Console.WriteLine("");
+                    match = true;
+                    continue;
+                }
+            }
+            if (!match) Console.WriteLine("No matches found.");
+        }
+        static void Main()//Основное меню
+        {
+            string uIF;
+            string key;
+            int numOfRec;
+            bool repeat = true;
+            Console.WriteLine("NoTeBoOk greets you!");
+            Console.WriteLine("");
+            List<Person> Persons = new List<Person>();
+            do
+            {
+                Console.WriteLine("");
+                Console.WriteLine("If you want to select an option, enter its number and press ENTER.");
+                Console.WriteLine("Menu:");
+                Console.WriteLine("(1)Input data.");
+                Console.WriteLine("(2)Output data.");
+                Console.WriteLine("(3)Quit NoteBook");
+                uIF = Console.ReadLine();
+                if (uIF == "1")
+                {
+                    uIF = "";
+                    Console.WriteLine("");
+                    Console.WriteLine("If you want to select an option, enter its number and press ENTER.");
+                    Console.WriteLine("Input data menu:");
+                    Console.WriteLine("(1)Enter data manually.");
+                    Console.WriteLine("(2)Activate the generator.");
+                    uIF = Console.ReadLine();
+                    if (uIF == "1")
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("Enter the number of records:");
+                        try { numOfRec = Convert.ToInt32(Console.ReadLine()); }
+                        catch (System.FormatException)
+                        {
+                            Console.WriteLine("");
+                            Console.WriteLine("It looks like you entered something wrong (only numbers without extraneous characters) try again.");
+                            continue;
+                        }
+                        for (int i = 0; i < numOfRec; i++)
+                        {
+                            Person test = new Person();
+                            manualInput(test);
+                            Persons.Add(test);
+                            Console.WriteLine("Successed!");
+                        }
+                    }
+                    else if (uIF == "2")
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("Enter the number of records:");
+                        try { numOfRec = Convert.ToInt32(Console.ReadLine()); }
+                        catch (System.FormatException)
+                        {
+                            Console.WriteLine("");
+                            Console.WriteLine("It looks like you entered something wrong (only numbers without extraneous characters) try again.");
+                            continue;
+                        }
+                        for (int i = 0; i < numOfRec; i++)
+                        {
+                            Person test = new Person();
+                            randomInput(test);
+                            Persons.Add(test);
+                            Console.WriteLine("Successed!");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("It looks like you entered something wrong (only numbers without extraneous characters) try again.");
+                        continue;
+                    }
+                }
+                else if (uIF == "2")
+                {
+                    uIF = "";
+                    Console.WriteLine("");
+                    Console.WriteLine("If you want to select an option, enter its number and press ENTER.");
+                    Console.WriteLine("Output data menu:");
+                    Console.WriteLine("(1)Show whole book.");
+                    Console.WriteLine("(2)Search by parameter.");
+                    uIF = Console.ReadLine();
+                    if (uIF == "1")
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("The display of the book engaged.");
+                        printAllData(Persons);
+                        Console.WriteLine("Successed");
+                    }
+                    else if (uIF == "2")
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("Enter the word(or number) you want to search for(Case sensitive):");
+                        key = Console.ReadLine();
+                        Console.WriteLine("");
+                        searchInData(Persons, key);
+                    }
+                    else
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("It looks like you entered something wrong (only numbers without extraneous characters) try again.");
+                        continue;
+                    }
+                }
+                else if (uIF == "3") repeat = false;
+                else
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("It looks like you entered something wrong (only numbers without extraneous characters) try again.");
+                    continue;
+                }
+            } while (repeat);
+        }
+    }
+}
