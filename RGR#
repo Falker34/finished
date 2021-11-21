@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Work
 {
@@ -11,9 +7,9 @@ namespace Work
         string firstn = "None";
         public c10to7(string number) // конструктор по-умолчанию
         {
-           this.firstn = number;
+           firstn = number;
         }
-        public string from10to7 (string number)
+        public string from10to7 ()
         {
             string rest = "";
             int num_int = Convert.ToInt32(firstn);
@@ -37,18 +33,18 @@ namespace Work
             foreach (char elment in firstn)
                 if ((elment < 48) || (elment > 57))
                     return "Неверный формат числа\n";
-                else if ((elment > 48) && (elment <= 57))// проверка на то чтобы числа имели смысл(не "00000000000")
+                else if (elment > 48)// проверка на то чтобы числа имели смысл(не "00000000000")
                     matter_number = true;
-            return (matter_number == true) ? from10to7(firstn) : "Неверный формат числа\n";
+            return (matter_number) ? from10to7() : "Неверный формат числа\n";
         }
         public string type() 
         {
-            if (this.show() == "Неверный формат числа\n") // проверка на исключения через предыдущий метод
+            if (show() == "Неверный формат числа\n") // проверка на исключения через предыдущий метод
                 return "Неверный формат числа\n";
 
             int sum = 0;
-            int num = Convert.ToInt32(this.show());
-            foreach (int number in from10to7(firstn))//нужно узнать длину преобразованного числа и пройтись по нему
+            int num = Convert.ToInt32(show());
+            foreach (int number in from10to7())//находим сумму всех разрядов числа
             {
                 sum += num % 10;
                 num /= 10;
@@ -72,13 +68,11 @@ namespace Work
             Console.WriteLine("Выполнял работу: Камышев Данила Дмитриевич");
             Console.WriteLine("Группа: ИС-29");
             Console.WriteLine("Задание: Напишите класс c10to7, конвертирующий из системы счисления 10 в систему счисления 7, определяющий является ли число чётным или нечётным.");
-            string number;
             Console.WriteLine("Введите число для преобразования: ");
-            number = Console.ReadLine();
+            string number = Console.ReadLine();
             c10to7 test = new c10to7(number);
             Console.WriteLine(test.show() + "\n" + test.type() + "\n");
             Console.ReadKey();
         }
     }
 }
-
